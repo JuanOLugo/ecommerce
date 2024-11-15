@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Authentication } from "../../Utils/Auth.connection";
 import { NavLink } from "react-router-dom";
+import { autoDefaultStates } from "../../Utils/AutoDefaultStates";
+import { ErrorHandler } from "../../Utils/ErrorHandler";
 function Auth() {
   const Authenticator = new Authentication("http://localhost:3000");
 
@@ -9,48 +11,29 @@ function Auth() {
   const [PasswordState, setPasswordState] = useState("");
   const [ErrorMsg, setErrorMsg] = useState(null);
 
-  const ErrorHandler = (message, time_message) => {
-    setErrorMsg(message);
-    setTimeout(() => {
-      setErrorMsg(null);
-    }, time_message);
-  };
-
-  const data = {
-    name: "jua",
-    age: 12
-  }
-
-
-  const autoDefaultStates = ({...states}) => {
-    console.log(states)
-    const statesToArray = Object.keys(states)
-    statesToArray.forEach(state => {
-      states[state]("")
-    })
-  }
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
     if (EmailState.length < 3 || PasswordState.length < 3)
       return ErrorHandler("Rellene las credenciales", 2000);
 
-     if (!AuthState) {
-       //Register
-       const user_data = { EmailState, PasswordState };
-       const AuthenticatorResponse = await Authenticator.register(user_data);
-       console.log(AuthenticatorResponse);
-     } else {
-       //Login
-       const user_data = { EmailState, PasswordState };
-       const AuthenticatorResponse = await Authenticator.login(user_data);
-       console.log(AuthenticatorResponse);
-     }
+    if (AuthState) {
+      //Register
+      const user_data = { Email: EmailState, Password: PasswordState };
+      const AuthenticatorResponse = await Authenticator.register(user_data);
+      console.log(AuthenticatorResponse);
+
+    } else {
+      //Login
+      const user_data = { Email: EmailState, Password: PasswordState };
+      const AuthenticatorResponse = await Authenticator.login(user_data);
+      console.log(AuthenticatorResponse);
+    }
 
     autoDefaultStates({
       EmailState: (DATA) => setEmailState(DATA),
-      PasswordState: (DATA) => setPasswordState(DATA)
-    })
+      PasswordState: (DATA) => setPasswordState(DATA),
+    });
   };
 
   return (
@@ -99,7 +82,7 @@ function Auth() {
               name="submit_button"
               className="bg-indigo-500 w-full py-2 text-white px-2 rounded-md "
             >
-              {AuthState ? "Inicia Sesion" : "Registrate"}
+              {AuthState ? "Registrate" : "Inicia Sesion"}
             </button>
           </div>
           <div className=" w-full text-center  h-9">
