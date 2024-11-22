@@ -7,6 +7,7 @@ import Logout from "./components/Auth/Logout";
 import Home from "./components/Public Routes/Home";
 import ProtectedRouteObserver from "./components/ProtectedRoute/ProtectedRouteObserver";
 import RouteForNavbar from "./components/ProtectedRoute/RouteForNavbar";
+import Buy from "./components/Buy/Buy";
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
               <Route element={<ProtectectRoute />}>
                 <Route path="/comprar" element={<h1>Comprar</h1>} />
                 <Route path="/carrito" element={<h1>Carrito</h1>} />
-                <Route path="/buy" element={<h1>Vender</h1>} />
+                <Route path="/buy" element={<Buy/>} />
                 <Route path="/logout/:token" element={<Logout />} />
               </Route>
             </Route>
